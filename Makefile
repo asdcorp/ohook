@@ -1,6 +1,6 @@
 OPT=-Os -Wall
 CFLAGS=-fno-ident -fno-stack-check -fno-stack-protector
-LDFLAGS=-L. -nostartfiles -nostdlib -lucrt -Wl,--exclude-all-symbols,--enable-stdcall-fixup,--dynamicbase,--nxcompat,--subsystem,windows:6.0
+LDFLAGS=-L. -nostartfiles -nostdlib -lucrt -luser32 -lkernel32 -Wl,--exclude-all-symbols,--enable-stdcall-fixup,--dynamicbase,--nxcompat,--subsystem,windows:6.0
 
 PREFIX32=C:/mingw32/bin/
 PREFIX64=C:/mingw64/bin/

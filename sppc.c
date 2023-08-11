@@ -13,6 +13,15 @@ typedef struct {
     UINT64 qwValidityExpiration;
 } SL_LICENSING_STATUS;
 
+typedef enum {
+    SL_DATA_NONE = REG_NONE,
+    SL_DATA_SZ = REG_SZ,
+    SL_DATA_DWORD = REG_DWORD,
+    SL_DATA_BINARY = REG_BINARY,
+    SL_DATA_MULTI_SZ,
+    SL_DATA_SUM = 100
+} SLDATATYPE;
+
 HRESULT WINAPI SLGetLicensingStatusInformation(
     HSLC hSLC,
     SLID *pAppID,
@@ -22,12 +31,46 @@ HRESULT WINAPI SLGetLicensingStatusInformation(
     SL_LICENSING_STATUS **ppLicensingStatus
 );
 
+HRESULT WINAPI SLGetProductSkuInformation(
+    HSLC hSLC,
+    const SLID *pProductSkuId,
+    PCWSTR pwszValueName,
+    SLDATATYPE *peDataType,
+    UINT *pcbValue,
+    PBYTE *ppbValue
+);
+
 BOOL APIENTRY WINAPI dll_main(
     HINSTANCE hinstDLL,
     DWORD fdwReason,
     LPVOID lpvReserved
 ) {
     return TRUE;
+}
+
+BOOL check_for_grace(HSLC hSLC, SLID *pProductSkuId) {
+    PBYTE *pBuffer = malloc(4096);
+    UINT cbSize = 4096;
+
+    if(SLGetProductSkuInformation(
+        hSLC,
+        pProductSkuId,
+        L"Name",
+        NULL,
+        &cbSize,
+        pBuffer
+    ) != S_OK) {
+        free(pBuffer);
+        return FALSE;
+    }
+
+    if(wcsstr((PWSTR)*pBuffer, L"Grace") != NULL) {
+        free(pBuffer);
+        return TRUE;
+    }
+
+	free(pBuffer);
+    return FALSE;
 }
 
 HRESULT WINAPI SLGetLicensingStatusInformationHook(
@@ -52,6 +95,7 @@ HRESULT WINAPI SLGetLicensingStatusInformationHook(
 
     for(int i = 0; i < *pnStatusCount; i++) {
         if((*ppLicensingStatus+i)->eStatus == 0) continue;
+        if(check_for_grace(hSLC, &((*ppLicensingStatus+i)->SkuId))) continue;
 
         (*ppLicensingStatus+i)->eStatus = 1;
         (*ppLicensingStatus+i)->dwGraceTime = 0;

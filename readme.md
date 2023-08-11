@@ -23,7 +23,7 @@ copy /y sppc64.dll "%programfiles%\Microsoft Office\root\vfs\System\sppc.dll"
 0.0.0.0 ols.officeapps.live.com
 ```
 
-4. Install a blank key for the edition you want to use. Make sure to check using `slmgr.vbs -dlv all` that the `Grace` license for Office has `Unlicensed` status, otherwise it may interfere. You may fix this with `slmgr.vbs -upk ACTIVATION_ID`.
+4. Install a blank key for the edition you want to use.
 
 Please note these steps are an example. As stated before, no direct support will be provided for usage of this method. You should use one of the solutions provided by our **authorized** partners and direct your support queries to them.
 
