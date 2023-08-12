@@ -1,5 +1,6 @@
 #define _WIN32_WINNT _WIN32_WINNT_WIN10
 #include <windows.h>
+#include <shlwapi.h>
 
 typedef GUID SLID;
 typedef void *HSLC;
@@ -49,27 +50,20 @@ BOOL APIENTRY WINAPI dll_main(
 }
 
 BOOL check_for_grace(HSLC hSLC, SLID *pProductSkuId) {
-    PBYTE *pBuffer = malloc(4096);
-    UINT cbSize = 4096;
+    PBYTE pBuffer = 0;
+    UINT cbSize = 0;
 
-    if(SLGetProductSkuInformation(
-        hSLC,
-        pProductSkuId,
-        L"Name",
-        NULL,
-        &cbSize,
-        pBuffer
-    ) != S_OK) {
-        free(pBuffer);
+    if(SLGetProductSkuInformation(hSLC, pProductSkuId, L"Name", NULL, &cbSize, &pBuffer) != S_OK) {
+        LocalFree(pBuffer);
         return FALSE;
     }
 
-    if(wcsstr((PWSTR)*pBuffer, L"Grace") != NULL) {
-        free(pBuffer);
+    if(StrStrNIW((PWSTR)pBuffer, L"Grace", cbSize) != NULL) {
+        LocalFree(pBuffer);
         return TRUE;
     }
 
-	free(pBuffer);
+    LocalFree(pBuffer);
     return FALSE;
 }
 
