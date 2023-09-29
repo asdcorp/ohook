@@ -61,7 +61,7 @@ There are also other issues with installing license files from other editions bu
 After the license check, these editions make a request to the `ols.officeapps.live.com` service to retrieve an expiration date of user's subscription. This is done in order to evaluate should the local license be renewed. Since the service replies there is no subscription associated with the device, a notification is shown. Blocking access to the service prevents Office from being told the truth.
 
 ### Does this enable 1TB of storage on OneDrive?
-No.
+No. As OneDrive is a online service, the actual storage limit is saved on your Microsoft Account according what you actually bought and have linked with your MS. So that is not and won't be possible.
 
 License
 -------
