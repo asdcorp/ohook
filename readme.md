@@ -2,7 +2,7 @@ ohook
 =====
 An universal Office "activation" hook with main focus of enabling full functionality of subscription editions.
 
-This project is released mainly for our partners. We won't be directly providing any kind support for users.
+This project is released mainly for [our partners](https://massgrave.dev/ohook.html). We won't be directly providing any kind of support for users.
 
 Installation
 ------------
@@ -25,7 +25,7 @@ copy /y sppc64.dll "%programfiles%\Microsoft Office\root\vfs\System\sppc.dll"
 
 4. Install a blank key for the edition you want to use.
 
-Please note these steps are an example. As stated before, no direct support will be provided for usage of this method. You should use one of the solutions provided by our **authorized** partners and direct your support queries to them.
+Please note these steps are an example and are based on our internal tests. As stated before, no direct support will be provided for usage of this method. You should use one of the solutions provided by [our **authorized** partners](https://massgrave.dev/ohook.html) and direct your support queries to them.
 
 Blank keys
 ----------
