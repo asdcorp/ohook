@@ -1,12 +1,12 @@
 OPT=-Os -Wall
 CFLAGS=-fno-ident
-LDFLAGS=-L. -nostartfiles -nostdlib -lkernel32 -lshlwapi -Wl,--exclude-all-symbols,--enable-stdcall-fixup,--dynamicbase,--nxcompat,--subsystem,windows:6.0
+LDFLAGS=-L. -nostartfiles -nostdlib -lkernel32 -lshlwapi -ladvapi32 -Wl,--exclude-all-symbols,--enable-stdcall-fixup,--dynamicbase,--nxcompat,--subsystem,windows:6.0
 
 PREFIX32=C:/mingw32/bin/
 PREFIX64=C:/mingw64/bin/
 
-CC32=gcc -Wl,-e_dll_main -municode
-CC64=gcc -Wl,-edll_main -municode
+CC32=gcc -Wl,-e_DllMain -municode
+CC64=gcc -Wl,-eDllMain -municode
 
 all: sppc32.dll sppc64.dll
 

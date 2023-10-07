@@ -18,12 +18,7 @@ mklink "%programfiles%\Microsoft Office\root\vfs\System\sppcs.dll" "%windir%\Sys
 copy /y sppc64.dll "%programfiles%\Microsoft Office\root\vfs\System\sppc.dll"
 ```
 
-3. (optional) In case of some Office editions which show "There was a problem checking this device's license status" banner, you may need to add the following to the `hosts` file:
-```
-0.0.0.0 ols.officeapps.live.com
-```
-
-4. Install a blank key for the edition you want to use.
+3. Install a blank key for the edition you want to use.
 
 Please note these steps are an example and are based on our internal tests. As stated before, no direct support will be provided for usage of this method. You should use one of the solutions provided by [our **authorized** partners](https://massgrave.dev/ohook.html) and direct your support queries to them.
 
@@ -57,8 +52,8 @@ With this method, a correct license for the installed edition is used, meaning e
 
 There are also other issues with installing license files from other editions but we won't be bothering with them.
 
-### Why do some editions require the hosts file modification?
-After the license check, these editions make a request to the `ols.officeapps.live.com` service to retrieve an expiration date of user's subscription. This is done in order to evaluate should the local license be renewed. Since the service replies there is no subscription associated with the device, a notification is shown. Blocking access to the service prevents Office from being told the truth.
+### Why is the value of TimeOfLastHeartbeatFailure changed to some date in the future?
+After the license check, some Office editions make a request to the `ols.officeapps.live.com` service to retrieve an expiration date of user's subscription. This is done in order to evaluate should the local license be renewed. Since the service replies there is no subscription associated with the device, a notification is shown. Setting TimeOfLastHeartbeatFailure to some date in the future prevents Office from doing this check.
 
 ### Does this enable 1TB of storage on OneDrive?
 No.
