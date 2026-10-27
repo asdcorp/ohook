@@ -106,6 +106,8 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -131,13 +133,25 @@ jobs:
             throw "Release assets are missing: $($missing -join ', ')"
           }
 
+          $versionTags = @(
+            git tag --list |
+              Where-Object { $_ -match '^v?\d+\.\d+(\.\d+)?$' } |
+              ForEach-Object {
+                $version = $_ -replace '^v', ''
+                [pscustomobject]@{ Tag = $_; Version = [version]$version }
+              } |
+              Sort-Object Version -Descending
+          )
+          if ($versionTags.Count -eq 0) {
+            throw "No version tag was found to use as the release base."
+          }
+
+          $baseVersion = $versionTags[0].Version.ToString(2)
           $shortSha = $env:GITHUB_SHA.Substring(0, 7)
-          $date = [DateTime]::UtcNow.ToString("yyyyMMdd")
-          $releaseDate = [DateTime]::UtcNow.ToString("yyyy-MM-dd")
-          $tag = "build-$date-$shortSha-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"
+          $tag = "$baseVersion-build.$env:GITHUB_RUN_NUMBER-$shortSha-$env:GITHUB_RUN_ATTEMPT"
           $assets = @($expected | ForEach-Object { Join-Path "release-assets" $_ })
 
-          gh release create $tag --target "$env:GITHUB_SHA" --title "Build $shortSha - $releaseDate" --notes "Automated build for commit $env:GITHUB_SHA." @assets
+          gh release create $tag --target "$env:GITHUB_SHA" --title "$baseVersion build #$env:GITHUB_RUN_NUMBER ($shortSha)" --notes "Automated build of version $baseVersion.`n`nCommit: $env:GITHUB_SHA`nBuild: $env:GITHUB_RUN_NUMBER`nDate (UTC): $([DateTime]::UtcNow.ToString('yyyy-MM-dd HH:mm:ss'))" @assets
           if ($LASTEXITCODE -ne 0) {
             exit $LASTEXITCODE
           }
